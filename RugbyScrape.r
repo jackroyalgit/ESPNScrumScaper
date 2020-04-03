@@ -2,6 +2,7 @@
 
 #Load scraping library
 library("rvest")
+library(stringr)
 
 #Helper function which ensures doesn't timeout while scraping
 #Author: Krzysztof Przygodzki
@@ -48,6 +49,12 @@ View(rugbyPlayer)
 
 #Omits last column which is just full of NAs
 rugbyPlayer <- rugbyPlayer[1:(length(rugbyPlayer)-1)]
+rugbyPlayer
+
+#Creates team variable and moves value from player column into its own column
+split_player_team <- str_split_fixed(rugbyPlayer$Player,"\\(",2)
+rugbyPlayer$Player <- split_player_team[,1]
+rugbyPlayer$Team <- str_remove(split_player_team[,2], "\\)")
 
 #Export to CSV file for easy portability
 write.csv(rugbyPlayer, "C:\\Users\\Jackr\\Desktop\\RugbyPlayerDataESPN.csv")
